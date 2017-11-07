@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--配置加载属性文件-->
+    <context:property-placeholder location="classpath:env.properties"/>
+
+    <!--配置开启组件扫描-->
+    <context:component-scan base-package="com.taotao.admin.controller"/>
+
+     <!-- 开启MVC注解驱动 -->
+    <mvc:annotation-driven/>
+
+    <!-- 配置视图解析器 -->
+    <mvc:view-resolvers>
+        <mvc:jsp prefix="/WEB-INF/views/" suffix=".jsp"/>
+    </mvc:view-resolvers>
+
+    <!-- 配置静态资源用WEB容器默认的servlet来处理 -->
+    <mvc:default-servlet-handler/>
+
+    <!-- 配置视图控制器 -->
+    <mvc:view-controller path="/" view-name="index"/>
+
+
+    <!--配置文件解析器-->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+        <!-- 设置文件上传编码 -->
+        <property name="defaultEncoding" value="utf-8"/>
+        <!-- 设置文件上传大小 2MB -->
+        <property name="maxUploadSize" value="2097152"/>
+    </bean>
+
+    <!-- 配置当前应用名称 -->
+    <dubbo:application name="taotao-admin-web"/>
+
+    <!-- 配置服务注册中心，使用zookeeper注册中心引用服务地址 -->
+    <dubbo:registry address="zookeeper://192.168.19.130:2181"/>
+
+    <!-- 配置引用的服务 -->
+    <dubbo:reference interface="com.taotao.admin.service.ItemCatService"
+                     id="itemCatService" timeout="60000"/>
+
+    <dubbo:reference interface="com.taotao.admin.service.ItemService"
+                     id="itemService" timeout="60000"/>
+
+    <dubbo:reference interface="com.taotao.admin.service.ItemDescService"
+                     id="itemDescService" timeout="60000"/>
+
+    <dubbo:reference interface="com.taotao.admin.service.ContentCategoryService"
+                     id="contentCategoryService" timeout="60000"/>
+
+    <dubbo:reference interface="com.taotao.admin.service.ContentService"
+                     id="contentService" timeout="60000"/>
+</beans>

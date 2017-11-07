@@ -12,6 +12,7 @@ import java.net.URLDecoder;
 
 /**
  * Created by myname on 2017/9/27.
+ * 商品管理
  */
 @RestController
 @RequestMapping("/item")
